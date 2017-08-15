@@ -9,12 +9,16 @@ from alien import Alien
 def check_keydown_event(event, ai_settings, screen, ship, bullets):
     if event.key == pygame.K_d:
         ship.moving_right = True
+        ship.set_image('right')
     elif event.key == pygame.K_a:
         ship.moving_left = True
+        ship.set_image('left')
     elif event.key == pygame.K_s:
         ship.moving_down = True
+        ship.set_image('down')
     elif event.key == pygame.K_w:
         ship.moving_up = True
+        ship.set_image('up')
     elif event.key == pygame.K_j and len(bullets) < ai_settings.bullets_allowed:
         fire_bullet(ai_settings, screen, ship, bullets)
     elif event.key == pygame.K_ESCAPE:
@@ -30,12 +34,16 @@ def fire_bullet(ai_settings, screen, ship, bullets):
 def check_keyup_event(event, ship):
     if event.key == pygame.K_d:
         ship.moving_right = False
+        ship.set_image('stop')
     if event.key == pygame.K_a:
         ship.moving_left = False
+        ship.set_image('stop')
     if event.key == pygame.K_s:
         ship.moving_down = False
+        ship.set_image('stop')
     if event.key == pygame.K_w:
         ship.moving_up   = False
+        ship.set_image('stop')
 
 def check_events(ai_settings, screen, stats, play_button, ship, bullets):
     for event in pygame.event.get():
