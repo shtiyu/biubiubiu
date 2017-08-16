@@ -1,6 +1,7 @@
 import sys
 import pygame
 from time import sleep
+from random import randint
 
 from bullet import Bullet
 from alien import Alien
@@ -45,7 +46,7 @@ def check_keyup_event(event, ship):
         ship.moving_up   = False
         ship.set_image('stop')
 
-def check_events(ai_settings, screen, stats, play_button, ship, bullets):
+def check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -55,11 +56,21 @@ def check_events(ai_settings, screen, stats, play_button, ship, bullets):
             check_keyup_event(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(stats, play_button, mouse_x, mouse_y)
+            check_play_button(ai_settings, screen, stats, play_button, ship,  aliens, bullets, mouse_x, mouse_y)
 
-def check_play_button(stats, play_button, mouse_x, mouse_y):
-    if play_button.rect.collidepoint(mouse_x, mouse_y):
+def check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y):
+    if play_button.rect.collidepoint(mouse_x, mouse_y) and not stats.game_active:
+
+        pygame.mouse.set_visible(False)
+        # 重置游戏
+        stats.reset_stats()
         stats.game_active = True
+
+        aliens.empty()
+        bullets.empty()
+
+        create_fleet(ai_settings, screen, aliens)
+        ship.center_ship()
 
 def play_music(type):
 
@@ -73,13 +84,22 @@ def play_music(type):
         effect = pygame.mixer.Sound('sounds/user_down.wav')
         pygame.mixer.Sound.play(effect)
 
-def update_aliens(stats, screen, ship, aliens, bullets):
+def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
     aliens.update()
 
     check_fleet_edges(aliens)
     # 飞船与敌机碰撞
-    if pygame.sprite.spritecollideany(ship, aliens):
-        ship_hit(stats, ship, bullets)
+
+    for alien in aliens.copy():
+        if alien.rect.collidepoint((ship.centerX, ship.centerY)):
+            aliens.remove(alien)
+            ship_hit(stats, ship, bullets)
+
+    if len(aliens) < 2 :
+        create_fleet(ai_settings, screen, aliens)
+
+    # if pygame.sprite.spritecollideany(ship, aliens):
+        # ship_hit(stats, ship, bullets)
 
 def update_bullets(ai_settings, screen, aliens, bullets):
     bullets.update()
@@ -99,10 +119,14 @@ def check_bullet_alien_collisions(ai_settings, screen, aliens, bullets):
 
 # 生成敌机
 def create_fleet(ai_settings, screen, aliens):
-    alien = Alien(ai_settings, screen)
-    aliens.add(alien)
 
-def update_screen(ai_setting, screen, stats, ship, aliens, bullets, play_button):
+    aliens_num = randint(1, 5)
+
+    for i in range(1, aliens_num):
+        alien = Alien(ai_settings, screen)
+        aliens.add(alien)
+
+def update_screen(ai_setting, screen, stats, ship, aliens, bullets, play_button, time_passed):
 
     if not stats.game_active:
         play_button.draw_button()
@@ -110,7 +134,7 @@ def update_screen(ai_setting, screen, stats, ship, aliens, bullets, play_button)
     for bullet in bullets.sprites():
         bullet.draw_bullet()
 
-    ship.blitme()
+    ship.blitme(time_passed)
     aliens.draw(screen)
     pygame.display.flip()
 
@@ -126,14 +150,13 @@ def ship_hit(stats, ship, bullets):
     stats.ships_left -= 1  # 扣生命数
     play_music('down')  # 坠机音乐
 
+    ship.crash()
+
     if stats.ships_left > 0:
         bullets.empty()         # 清空子弹
-        ship.center_ship()      # 重置位置
-        sleep(0.5)              # 睡一会
     else:
         stats.game_active = False
-
-
+        pygame.mouse.set_visible(True)
 
 
 # def change_fleet_direction(ai_settings, aliens):#

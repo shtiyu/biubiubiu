@@ -33,18 +33,18 @@ def run_game():
     #背景音乐
     gf.play_music('bgm')
 
+    clock = pygame.time.Clock()
 
     while True:
         # 按键事件
-        gf.check_events(ai_settings, screen, stats, play_button, ship, bullets)
+        gf.check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets)
+        gf.update_bullets(ai_settings, screen, aliens, bullets)
 
         if stats.game_active:
             # 飞机/子弹 更新
             ship.update()
-            gf.update_bullets(ai_settings, screen, aliens, bullets)
-
             #敌机位置
-            gf.update_aliens(stats, screen, ship, aliens, bullets)
+            gf.update_aliens(ai_settings, stats, screen, ship, aliens, bullets)
 
         # 背景滚动
         screen.blit(bg_img1, (0, pos_y1))
@@ -58,6 +58,7 @@ def run_game():
         if pos_y2 > 1024:
             pos_y2 = 0
 
-        gf.update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button)
+        time_passed = clock.tick()
+        gf.update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button, time_passed)
 
 run_game()
