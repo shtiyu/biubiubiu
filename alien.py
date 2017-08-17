@@ -6,16 +6,18 @@ class Alien(Sprite):
 
     def __init__(self, ai_settings, screen):
         super().__init__()
+
         self.screen = screen
         self.ai_settings = ai_settings
 
         alien_num  = randint(1, 3)
         self.image = pygame.image.load('images/alien_' + str(alien_num) + '.png')
         self.rect  = self.image.get_rect()
+        self.score = 10 # 击落本机获得的分数
 
         # 敌机移动速度
         self.alien_speed_factor = 2
-        self.fleet_drop_speed = randint(4, 8)
+        self.fleet_drop_speed   = randint(4, 8)
 
         # 1向右移动，-1向左移动
         self.fleet_direction = 1

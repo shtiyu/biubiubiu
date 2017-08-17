@@ -5,6 +5,7 @@ from button import Button
 from game_stats import GameStats
 from settings import Settings
 from ship import Ship
+from scoreboard import Scoreboard
 import game_funcitons as gf
 
 def run_game():
@@ -17,8 +18,8 @@ def run_game():
     pygame.display.set_caption("Alien Invasion")
     play_button = Button(ai_settings, screen, 'PLAY')
 
-    stats   = GameStats(ai_settings)
-
+    stats      = GameStats(ai_settings)
+    scoreboard = Scoreboard(ai_settings, screen, stats)
     bg_img1 = pygame.image.load("images/map.jpg").convert()
     bg_img2 = bg_img1.copy()
     pos_y1  = -1024
@@ -37,14 +38,14 @@ def run_game():
 
     while True:
         # 按键事件
-        gf.check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets)
-        gf.update_bullets(ai_settings, screen, aliens, bullets)
+        gf.check_events(ai_settings, screen, stats, scoreboard, play_button, ship, aliens, bullets)
+        gf.update_bullets(ai_settings, screen, stats, scoreboard, aliens, bullets)
 
         if stats.game_active:
             # 飞机/子弹 更新
             ship.update()
             #敌机位置
-            gf.update_aliens(ai_settings, stats, screen, ship, aliens, bullets)
+            gf.update_aliens(ai_settings, stats, scoreboard, screen, ship, aliens, bullets)
 
         # 背景滚动
         screen.blit(bg_img1, (0, pos_y1))
@@ -59,6 +60,6 @@ def run_game():
             pos_y2 = 0
 
         time_passed = clock.tick()
-        gf.update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button, time_passed)
+        gf.update_screen(ai_settings, screen, stats, scoreboard, ship, aliens, bullets, play_button, time_passed)
 
 run_game()

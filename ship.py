@@ -1,10 +1,12 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship():
+class Ship(Sprite):
 
     _rate = 100 # 每帧需要停留的毫秒数
 
-    def __init__(self, ai_settings, screen):
+    def __init__(self, ai_settings, screen, size=1):
+        super().__init__()
         self.screen = screen
         self.ai_settings = ai_settings
 
