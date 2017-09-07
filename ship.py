@@ -153,13 +153,14 @@ class Ship(Sprite):
         ) for i in range(0, 6)]
 
     # 被击毁
-    def crash(self):
+    def crash(self, ships_left):
         self.crash_rect        = pygame.Rect(0, 0, 210, 208)
         self.crash_rect.center = self.rect.center
         self.set_crash_image_frames()
         self.alive_state = False
         self.order = 0
-        self.invincible_time = 3000
+        if ships_left:
+            self.invincible_time = 3000
 
 
 

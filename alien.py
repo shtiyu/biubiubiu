@@ -40,11 +40,10 @@ class Alien(Sprite):
     def fire(self):
         a_bullet = Alien_bullet(self.ai_settings, self.screen, self.bullet_speed, self)
         self.bullets.add(a_bullet)
-        pass
 
-    def blitme(self, passed_time):
+    def blitme(self, passed_time, stats):
         self.passed_time += passed_time
-        if self.passed_time > 600 and self.rect.y > 0:
+        if self.passed_time > 600 and self.rect.y > 0 and stats.game_active:
             self.fire()
             self.passed_time = 0
         self.screen.blit(self.image, self.rect)
@@ -57,7 +56,6 @@ class Alien(Sprite):
         self.rect.y = self.y
 
     def resetPos(self, x="", y=""):
-
         if x != "":
             self.rect.x = int(x)
 

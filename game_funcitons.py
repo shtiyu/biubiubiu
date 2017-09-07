@@ -172,7 +172,7 @@ def update_screen(ai_setting, screen, stats, scoreboard, ship, aliens, bullets, 
     ship.blitme(time_passed)
 
     for alien in aliens.sprites():
-        alien.blitme(time_passed)
+        alien.blitme(time_passed, stats)
 
     if not stats.game_active:
         play_button.draw_button()
@@ -198,7 +198,7 @@ def ship_hit(stats, scoreboard, ship, bullets):
 
     scoreboard.prep_ships()
 
-    ship.crash()
+    ship.crash(stats.ships_left)
 
     if stats.ships_left > 0:
         bullets.empty()         # 清空子弹
