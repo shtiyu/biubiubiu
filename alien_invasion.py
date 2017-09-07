@@ -28,8 +28,9 @@ def run_game():
     ship    = Ship(ai_settings, screen)
     aliens  = Group()
     bullets = Group()
+    alien_bullets = Group()
 
-    gf.create_fleet(ai_settings, screen, aliens)
+    gf.create_fleet(ai_settings, screen, aliens, alien_bullets)
 
     #背景音乐
     gf.play_music('bgm')
@@ -38,14 +39,15 @@ def run_game():
 
     while True:
         # 按键事件
-        gf.check_events(ai_settings, screen, stats, scoreboard, play_button, ship, aliens, bullets)
-        gf.update_bullets(ai_settings, screen, stats, scoreboard, aliens, bullets)
+        gf.check_events(ai_settings, screen, stats, scoreboard, play_button, ship, aliens, bullets, alien_bullets)
+        gf.update_bullets(ai_settings, screen, stats, scoreboard, aliens, bullets, alien_bullets)
+
 
         if stats.game_active:
             # 飞机/子弹 更新
             ship.update()
             #敌机位置
-            gf.update_aliens(ai_settings, stats, scoreboard, screen, ship, aliens, bullets)
+            gf.update_aliens(ai_settings, stats, scoreboard, screen, ship, aliens, bullets, alien_bullets)
 
         # 背景滚动
         screen.blit(bg_img1, (0, pos_y1))
@@ -60,6 +62,6 @@ def run_game():
             pos_y2 = 0
 
         time_passed = clock.tick()
-        gf.update_screen(ai_settings, screen, stats, scoreboard, ship, aliens, bullets, play_button, time_passed)
+        gf.update_screen(ai_settings, screen, stats, scoreboard, ship, aliens, bullets, alien_bullets, play_button, time_passed)
 
 run_game()

@@ -12,7 +12,7 @@ class Ship(Sprite):
 
         #self.image = pygame.transform.scale(pygame.image.load('images/ship.png').convert_alpha(), (62, 50))
         self.direction   = 'stop'
-        self.image_big   = pygame.image.load('images/player.png')
+        self.image_big   = pygame.image.load('images/player.png').convert()
         self.image       = self.image_big.subsurface(pygame.Rect(92, 182, 184 - 92, 272 - 182))
         self.rect        = self.image.get_rect()
         self.screen_rect = screen.get_rect()
@@ -35,6 +35,14 @@ class Ship(Sprite):
         self.alive_state  = True  # 活着的状态
         self.crash_frames = []    # 机毁人亡序列
         self.passed_time  = 0
+
+        self.invincible_time = 0 #复活有3秒无敌时间
+
+    def check_invincible(self):
+        if self.invincible_time > 0:
+            return True
+        else:
+            return False
 
     # 设置飞机的图片
     def set_image(self, type):
@@ -106,6 +114,13 @@ class Ship(Sprite):
 
     def blitme(self, passed_time):
 
+        alpha = self.image.get_alpha()
+        if self.invincible_time > 0:
+            self.image.set_alpha(self.invincible_time % 255)
+            self.invincible_time -= passed_time
+        elif alpha is None or  alpha < 255:
+            self.image.set_alpha(255)
+
         if self.alive_state and self.image:
             self.screen.blit(self.image, self.rect)
             if self.air:
@@ -144,6 +159,7 @@ class Ship(Sprite):
         self.set_crash_image_frames()
         self.alive_state = False
         self.order = 0
+        self.invincible_time = 3000
 
 
 

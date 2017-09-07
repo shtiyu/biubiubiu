@@ -1,26 +1,34 @@
 import pygame
 from random import randint
 from pygame.sprite import Sprite
+from alien_bullet import Alien_bullet
 
 class Alien(Sprite):
 
-    def __init__(self, ai_settings, screen):
+    def __init__(self, ai_settings, screen, alien_bullets):
         super().__init__()
 
         self.screen = screen
         self.ai_settings = ai_settings
+        self.bullets = alien_bullets
 
         alien_num  = randint(1, 3)
         self.image = pygame.image.load('images/alien_' + str(alien_num) + '.png')
         self.rect  = self.image.get_rect()
         self.score = 10 # 击落本机获得的分数
 
+        self.fire_img = pygame.image.load('images/alien_bullet.png')
+
         # 敌机移动速度
+        fleet_drop_speed        = randint(4, 8)
         self.alien_speed_factor = 2
-        self.fleet_drop_speed   = randint(4, 8)
+        self.fleet_drop_speed   = fleet_drop_speed
+        self.bullet_speed       = fleet_drop_speed + randint(4, 8)
 
         # 1向右移动，-1向左移动
         self.fleet_direction = 1
+
+        self.passed_time = 0
 
         self.rect.x = randint(self.rect.width, ai_settings.screen_width - self.rect.width)
         self.rect.y = -self.rect.height
@@ -28,7 +36,17 @@ class Alien(Sprite):
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
-    def blitme(self):
+    # 敌机攻击
+    def fire(self):
+        a_bullet = Alien_bullet(self.ai_settings, self.screen, self.bullet_speed, self)
+        self.bullets.add(a_bullet)
+        pass
+
+    def blitme(self, passed_time):
+        self.passed_time += passed_time
+        if self.passed_time > 600 and self.rect.y > 0:
+            self.fire()
+            self.passed_time = 0
         self.screen.blit(self.image, self.rect)
 
     def update(self):
@@ -37,6 +55,14 @@ class Alien(Sprite):
         # self.rect.x = self.x
         self.y += self.fleet_drop_speed
         self.rect.y = self.y
+
+    def resetPos(self, x="", y=""):
+
+        if x != "":
+            self.rect.x = int(x)
+
+        if y != "":
+            self.rect.y = int(y)
 
     def check_edges(self, type):
         screen_rect = self.screen.get_rect()

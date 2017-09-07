@@ -39,7 +39,6 @@ class Settings():
         self.game_level += 1
 
         if self.game_level % 3 == 0:
-            if self.bullets_allowed <= 4:
+            if self.bullets_allowed <= 3:
                 self.bullets_allowed += 1
-                print(self.bullets_allowed)
 
