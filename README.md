@@ -7,4 +7,5 @@
 
 ## 运行截图
 ![run](https://github.com/shtiyu/biubiubiu/blob/master/images/example.gif?raw=true)
+<br>
 ![run](https://github.com/shtiyu/biubiubiu/blob/master/images/example.png?raw=true)
