@@ -3,10 +3,12 @@
 
 ## OSX下运行方法
 * 安装pygame依赖的库
-> brew install hg sdl sdl_image sdl_ttf sdl_mixer portmidi   
+> brew install hg sdl sdl_image sdl_ttf sdl_mixer portmidi
+>
 > (注：有大概率安装sdl_mixer后仍然无法使用mp3音效，原因是安装的版本与Python不兼容，需要上官网下载相应版本自行编译安装，请根据报错搜索解决）
 * 安装pygame
 > pip3 install --user hg+http://bitbucket.org/pygame/pygame
+>
 > (老版本Python有可能没有安装pip，请自行安装）
 * python3.5 alien_invasion.py
 
