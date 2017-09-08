@@ -118,7 +118,7 @@ class Ship(Sprite):
         if self.invincible_time > 0:
             self.image.set_alpha(self.invincible_time % 255)
             self.invincible_time -= passed_time
-        elif alpha is None or  alpha < 255:
+        elif alpha is None or alpha < 255:
             self.image.set_alpha(255)
 
         if self.alive_state and self.image:

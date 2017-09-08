@@ -90,7 +90,7 @@ def play_music(type):
         effect = pygame.mixer.Sound('sounds/user_down.wav')
         pygame.mixer.Sound.play(effect)
 
-def update_aliens(ai_settings, stats, scoreboard, screen, ship, aliens, bullets, alien_bullets):
+def update_aliens(ai_settings, stats, scoreboard, screen, ship, aliens, bullets, alien_bullets, time_passed):
     aliens.update()
 
     check_fleet_edges(aliens)
@@ -106,13 +106,14 @@ def update_aliens(ai_settings, stats, scoreboard, screen, ship, aliens, bullets,
             alien_bullets.remove(a_bullet)
             ship_hit(stats, scoreboard, ship, bullets)
 
-
-    if len(aliens) < 2 :
-        ai_settings.level_up()
+    if ai_settings.decrease_time(time_passed) == True:
         create_fleet(ai_settings, screen, aliens, alien_bullets)
 
-    # if pygame.sprite.spritecollideany(ship, aliens):
-        # ship_hit(stats, ship, bullets)
+    # 随时间增长，增加难度
+    ai_settings.level_up(stats.get_game_time())
+    # if len(aliens) < 2 :
+    #     ai_settings.level_up()
+    #     create_fleet(ai_settings, screen, aliens, alien_bullets)
 
 def update_bullets(ai_settings, screen, stats, scoreboard, aliens, bullets, alien_bullets):
     bullets.update()
@@ -134,7 +135,6 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, scoreboard, aliens
 
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
-
     if collisions:
         for bullet, alien in collisions.items():
             for a in alien:
@@ -149,7 +149,7 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, scoreboard, aliens
 # 生成敌机
 def create_fleet(ai_settings, screen, aliens, alien_bullets):
 
-    aliens_num = int(randint(1, 5))
+    aliens_num = int(randint(ai_settings.alien_num_min, ai_settings.alien_num_min + 3))
     x = 0
 
     for i in range(1, aliens_num):

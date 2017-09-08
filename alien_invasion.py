@@ -42,12 +42,14 @@ def run_game():
         gf.check_events(ai_settings, screen, stats, scoreboard, play_button, ship, aliens, bullets, alien_bullets)
         gf.update_bullets(ai_settings, screen, stats, scoreboard, aliens, bullets, alien_bullets)
 
+        time_passed = clock.tick()
 
         if stats.game_active:
+            stats.increase_time(time_passed)
             # 飞机/子弹 更新
             ship.update()
             #敌机位置
-            gf.update_aliens(ai_settings, stats, scoreboard, screen, ship, aliens, bullets, alien_bullets)
+            gf.update_aliens(ai_settings, stats, scoreboard, screen, ship, aliens, bullets, alien_bullets, time_passed)
 
         # 背景滚动
         screen.blit(bg_img1, (0, pos_y1))
@@ -61,7 +63,6 @@ def run_game():
         if pos_y2 > 1024:
             pos_y2 = 0
 
-        time_passed = clock.tick()
         gf.update_screen(ai_settings, screen, stats, scoreboard, ship, aliens, bullets, alien_bullets, play_button, time_passed)
 
 run_game()

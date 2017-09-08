@@ -20,21 +20,25 @@ class Alien(Sprite):
         self.fire_img = pygame.image.load('images/alien_bullet.png')
 
         # 敌机移动速度
-        fleet_drop_speed        = randint(4, 8)
+        fleet_drop_speed        = randint(4, 12)
         self.alien_speed_factor = 2
         self.fleet_drop_speed   = fleet_drop_speed
-        self.bullet_speed       = fleet_drop_speed + randint(4, 8)
+        self.bullet_speed       = fleet_drop_speed + randint(4, 8) + ai_settings.game_level
 
         # 1向右移动，-1向左移动
         self.fleet_direction = 1
 
         self.passed_time = 0
 
+        self.fire_gap = randint(500, 700) # 发射间隔
+
         self.rect.x = randint(self.rect.width, ai_settings.screen_width - self.rect.width)
         self.rect.y = -self.rect.height
 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
+
+        self.next_x = None
 
     # 敌机攻击
     def fire(self):
@@ -43,7 +47,12 @@ class Alien(Sprite):
 
     def blitme(self, passed_time, stats):
         self.passed_time += passed_time
-        if self.passed_time > 600 and self.rect.y > 0 and stats.game_active:
+        gap = self.fire_gap - (self.ai_settings.game_level * 10)
+
+        if gap < 300:
+            gap = 300
+
+        if self.passed_time > gap and self.rect.y > 0 and stats.game_active:
             self.fire()
             self.passed_time = 0
         self.screen.blit(self.image, self.rect)
@@ -52,8 +61,21 @@ class Alien(Sprite):
         # self.check_edges()
         # self.x += self.alien_speed_factor * self.fleet_direction
         # self.rect.x = self.x
+
+        # 随机向左右移动
+        if self.next_x == None:
+            self.next_x = randint(0, self.screen.get_rect().width)
+        else:
+            if self.next_x > self.x:
+                self.x += 1
+            elif self.next_x < self.x:
+                self.x -= 1
+            else:
+                self.next_x = None
+
         self.y += self.fleet_drop_speed
         self.rect.y = self.y
+        self.rect.x = self.x
 
     def resetPos(self, x="", y=""):
         if x != "":

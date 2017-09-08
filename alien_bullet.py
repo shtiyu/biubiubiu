@@ -10,6 +10,7 @@ class Alien_bullet(Sprite):
         self.rect  = self.image.get_rect()
         # self.rect  = pygame.Rect(0, 0, ai_settings.bullet_width, ai_settings.bullet_height)
         self.rect.centerx = ship.rect.centerx
+        self.rect.centery = ship.rect.centery + 5
         self.rect.top = ship.rect.top
 
         self.y = float(self.rect.y)
